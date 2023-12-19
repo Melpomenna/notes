@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "Литература.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -65,7 +65,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
