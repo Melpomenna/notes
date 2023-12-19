@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Литература.md",
-                "mode": "preview",
+                "file": "C++.md",
+                "mode": "source",
                 "source": false
               }
             }
@@ -86,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Литература.md",
+                "file": "C++.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Литература.md",
+                "file": "C++.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -126,7 +126,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Литература.md"
+                "file": "C++.md"
               }
             }
           }
@@ -149,11 +149,11 @@
   },
   "active": "97ef29c42062eacc",
   "lastOpenFiles": [
-    "Паттерны проектирования.md",
+    "C++.md",
     "Литература.md",
+    "Паттерны проектирования.md",
     "Без названия.canvas",
     "Без названия.md",
-    "C++.md",
     "Unreal Engine.md",
     "c++.canvas"
   ]
