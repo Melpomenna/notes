@@ -1,0 +1,51 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": true,
+  "showAttachments": true,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "file:c++",
+      "color": {
+        "a": 1,
+        "rgb": 14736466
+      }
+    },
+    {
+      "query": "file:Unreal Engine",
+      "color": {
+        "a": 1,
+        "rgb": 15472798
+      }
+    },
+    {
+      "query": "file: Литература",
+      "color": {
+        "a": 1,
+        "rgb": 1887808
+      }
+    },
+    {
+      "query": "file: Паттерны Проектирования",
+      "color": {
+        "a": 1,
+        "rgb": 5431478
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": -0.9,
+  "nodeSizeMultiplier": 1.27395833333333,
+  "lineSizeMultiplier": 1.5546875,
+  "collapse-forces": false,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 10,
+  "linkStrength": 1,
+  "linkDistance": 250,
+  "scale": 1.4769860980686502,
+  "close": false
+}
