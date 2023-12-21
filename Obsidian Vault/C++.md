@@ -224,3 +224,224 @@ int main() {
 <h1>Небольшой совет: предпочитайте unordered_map, map</h1>
 
 Многие как и в прошлом примере используют map а не unordered_map, из-за чего, если много элементов, происходит частая балансировка, что может излишне сказаться на производительности. Если вам не надо содержать элементы отсортированными то предпочитайте unordered_map нежели map, учитывая количество элементов. В общем и целом как и в прошлом примере используйте что считаете нужным, но всегда стоит понимать каким инструментом вы пользуетесь.
+
+<h1>Фича #1</h1>
+Допустим у нас есть вот такой заголовочный файл:
+
+```cpp
+// header
+
+#pragma once
+
+namespace VStore {
+
+class VEngine {
+		...
+	public:
+		void Engine();
+		...
+};
+
+}
+
+```
+
+Мы не любим много писанины и постоянно писать префикс VStore не удобно, дабы это не писать можно сделать вот так:
+
+```cpp
+// source
+
+namespace VStore {
+
+void VEngine::Engine() {
+...
+}
+
+}
+
+```
+
+Оборачиваем наш source code в namespace, таким образом мы пишем меньше писанины, и это хорошо :3
+
+<h1>variant, optional, tuple - кто это?</h1>
+Без прелюдий, по порядку и с примерами:
+
+Varian - класс, позволяющий хранить достаточно большое количество разных типов данных,
+но в определенный момент времени имеет только 1 состояние:
+
+```cpp
+
+// Создаем объект
+variant<int,string> values{};
+
+values = 10; // в данный момент имеет значение типа int, 10
+
+cout << get<int>(values) << "\n"; // выведеться 10
+
+values = "123"; // теперь состояние на string, int потерялся.
+
+
+cout << get<string>(values) << "\n"; // выведеться 123
+
+cout << get<int>(values) << "\n"; // ошибка! в данный момент времени хранит string.
+
+```
+
+Очень удобен, как динамический тип дарнных.
+
+Так же имеется возможность проверить есть то или иное значение в текущий момент времени:
+
+```cpp
+
+// Создаем объект
+variant<int,string> values{};
+
+values = 10; // в данный момент имеет значение типа int, 10
+
+cout << get<int>(values) << "\n"; // выведеться 10
+
+values = "123"; // теперь состояние на string, int потерялся.
+
+
+cout << get<string>(values) << "\n"; // выведеться 123
+
+cout << get<int>(values) << "\n"; // ошибка! в данный момент времени хранит string.
+
+if (holds_alternative<int>(values)) { // false, в текущий момент хранит string
+	cout << get<int>(values) << "\n";
+}
+
+```
+
+
+Вариант будет полезен если не нужно выбрасывать ошибку повторно в программе и резко прерывать ее таким образом. Можно сохранить эту ошибку, и проверять имеется ли ошибка:
+
+```cpp
+
+
+class AlertMessage {
+...
+	public:
+		void Show();
+};
+
+// some function
+variant<int,exception_ptr> result{};
+try {
+	AlertMessage alert{};
+	alert.Show();
+	result = 200;
+} catch(...) {
+	result = current_exception();
+}
+
+// over method
+
+class Logger {
+...
+	public:
+	static void Log(const exception_ptr&);
+...
+};
+
+if (holds_alternatie<exception_ptr>(result)) {
+	Logger::Log(get<exception_ptr>(result));
+}
+
+```
+
+Так же из полезных функций имеется ***visit***!
+
+visit  первым аргументом принимает функции а втором variant, visit, как сам перевод, позволит вам заглянуть в ваш variant и воспроизвести тот метод, к+ какому состоянию он относиться, сейчас покажу:
+
+```c++
+class Player {  
+...
+};  
+  
+enum class AttackType {  
+  BASE,  
+  KRIT,  
+};  
+  
+enum class MagicAttackType {  
+  VOID,  
+  POISON  
+};  
+  
+using AttackHandler = function<float(const Player&)>;  
+  
+struct Functions {  
+  
+  static float BaseDamage(const Player& player) {  
+    cout << "BaseDamage\n";  
+...
+  }  
+  static float KritDamage(const Player& player) {  
+    cout << "KritDamage\n";  
+...
+  }  
+  static float VoidDamage(const Player& player) {  
+    cout << "VoidDamage\n";  
+... 
+  }  
+  static float PoisonDamage(const Player& player) {  
+    cout << "PoisonDamage\n";  
+... 
+  }};  
+  
+void InvokeAttack(const Player& lhs, Player& rhs, const AttackHandler& handler) {
+...
+  handler(lhs);
+  ...
+}  
+  
+template<class... Ts>  
+struct overloaded : Ts... { using Ts::operator()...; };  
+template<class... Ts>  
+overloaded(Ts...) -> overloaded<Ts...>;  
+  
+using variant_attack = variant<AttackType, MagicAttackType>;  
+  
+int main() {  
+  
+  vector<variant_attack> attackTypes{  
+      AttackType::KRIT,  
+      AttackType::BASE,  
+      MagicAttackType::VOID,  
+      MagicAttackType::POISON  
+  };  
+  
+  Player first{};  
+  Player second{};  
+  
+  auto f_handler = [](AttackType type) -> AttackHandler   {  
+    map<AttackType,AttackHandler> m_handler{  
+        {AttackType::BASE, Functions::BaseDamage},  
+        {AttackType::KRIT, Functions::KritDamage}  
+    };  
+    return m_handler[type];  
+  };  auto s_handler = [](MagicAttackType type)  -> AttackHandler  {  
+    map<MagicAttackType,AttackHandler> m_handler{  
+        {MagicAttackType::VOID, Functions::VoidDamage},  
+        {MagicAttackType::POISON, Functions::PoisonDamage}  
+    };  
+    return m_handler[type];  
+  };  
+  for(auto& item : attackTypes) {  
+    auto handler = visit(overloaded{f_handler,s_handler}, item);  
+    InvokeAttack(first,second,handler);  
+  }  
+}
+```
+
+Это пример кода который по типу атаки возвращает определенную функцию для вызова атаки,  каждая функция выводит свое имя. По итогу на экране мы сможем увидеть следующий текст:
+
+```
+KritDamage
+BaseDamage
+VoidDamage
+PoisonDamage
+```
+
+visit позволяет, 
